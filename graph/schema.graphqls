@@ -2,27 +2,36 @@
 #
 # https://gqlgen.com/getting-started/
 
+# This defines the schema for a simple TODO app:
+
+# Todo type has an id, text, done status and associated User
 type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+    id: ID!
+    text: String!
+    done: Boolean!
+    user: User!
 }
 
+# User type has an id and name
 type User {
-  id: ID!
-  name: String!
+    id: ID!
+    name: String!
 }
 
+# Query type has a todos field that returns a list of Todo
 type Query {
-  todos: [Todo!]!
+    todos: [Todo!]!
 }
 
+# NewTodo input type is used to create new todos
 input NewTodo {
-  text: String!
-  userId: String!
+    text: String!
+    userId: String!
 }
 
+# Mutation type has a createTodo field that takes a NewTodo and returns a Todo
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+    createTodo(input: NewTodo!): Todo!
 }
+
+# So in summary, it defines the types, queries and mutations to CRUD todos and associate them with users.
