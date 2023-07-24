@@ -1,28 +1,66 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/christiancrawford/go-gqlgen/graph"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 const defaultPort = "8080"
 
-func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
+func goDotEnvVariable(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
 	}
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	return os.Getenv(key)
+}
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+func main() {
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	dbUser := goDotEnvVariable("DB_USER")
+	dbPassword := goDotEnvVariable("DB_PASSWORD")
+	dbName := goDotEnvVariable("DB_NAME")
+	dbHost := goDotEnvVariable("DB_HOST")
+
+	connStr := fmt.Sprintf("user=%s password=%s dbname=%s host=%s", dbUser, dbPassword, dbName, dbHost)
+
+	// Replace the following with your actual PostgreSQL connection details
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal("Error connecting to the database: ", err)
+	}
+	defer db.Close()
+
+	// Test the connection
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("Error pinging the database: ", err)
+	}
+
+	fmt.Println("Connected to the PostgreSQL database!")
+
+	// Now you can perform database operations using the "db" object.
+	// For example, you can query data, insert records, etc.
+
+	// port := os.Getenv("PORT")
+	// if port == "" {
+	// 	port = defaultPort
+	// }
+
+	// srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+
+	// http.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	// http.Handle("/query", srv)
+
+	// log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	// log.Fatal(http.ListenAndServe(":"+port, nil))
 }
