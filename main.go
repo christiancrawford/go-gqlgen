@@ -1,11 +1,20 @@
 package main
 
 import (
-	"github.com/christiancrawford/go-gqlgen/db"
+	"log"
+
 	"github.com/christiancrawford/go-gqlgen/server"
+	"github.com/joho/godotenv"
 )
 
+func envLoad() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading env target")
+	}
+}
+
 func main() {
-	db.ConnectToPostgresDb()
+	envLoad() // Load from .env file
 	server.StartServer()
 }

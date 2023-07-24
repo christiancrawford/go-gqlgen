@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"math/big"
 
+	"github.com/christiancrawford/go-gqlgen/db"
 	"github.com/christiancrawford/go-gqlgen/graph/model"
 )
 
@@ -24,6 +25,32 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	}
 	r.todos = append(r.todos, todo)
 	return todo, nil
+}
+
+// CreateUser is the resolver for the createUser field.
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	db, err := db.ConnectToPostgresDb()
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Successful Connection to DB !")
+	}
+
+	var user model.User
+	user.ID = input.ID
+	user.FirstName = input.FirstName
+	user.LastName = input.LastName
+
+	_, err = db.Exec(`INSERT INTO users (id, first_name, last_name) VALUES (?, ?, ?`, user.ID, user.FirstName, user.LastName)
+
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Insert User is successed !")
+	}
+	defer db.Close()
+
+	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
 }
 
 // Todos is the resolver for the todos field.

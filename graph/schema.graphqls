@@ -15,7 +15,8 @@ type Todo {
 # User type has an id and name
 type User {
     id: ID!
-    name: String!
+    firstName: String!
+    lastName: String!
 }
 
 # Query type has a todos field that returns a list of Todo
@@ -29,9 +30,16 @@ input NewTodo {
     userId: String!
 }
 
+input NewUser {
+    id: ID!
+    firstName: String!
+    lastName: String!
+}
+
 # Mutation type has a createTodo field that takes a NewTodo and returns a Todo
 type Mutation {
     createTodo(input: NewTodo!): Todo!
+    createUser(input: NewUser!): User!
 }
 
 # So in summary, it defines the types, queries and mutations to CRUD todos and associate them with users.
