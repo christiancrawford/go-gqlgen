@@ -1,3 +1,4 @@
+// @/server.go
 package server
 
 import (
@@ -7,22 +8,32 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/christiancrawford/go-gqlgen/graph"
+	"github.com/christiancrawford/go-gqlgen/graph/common"
+	"github.com/christiancrawford/go-gqlgen/graph/generated"
+	resolvers "github.com/christiancrawford/go-gqlgen/graph/resolvers"
 )
 
-const defaultPort = "8080"
+const defaultPort = "4000"
 
 func StartServer() {
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	db, err := common.InitDb()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &resolvers.Resolver{}}))
+
+	customCtx := &common.CustomContext{
+		Database: db,
+	}
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	http.Handle("/query", common.CreateContext(customCtx, srv))
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
