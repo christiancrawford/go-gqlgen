@@ -31,7 +31,6 @@ input NewTodo {
 }
 
 input NewUser {
-    id: ID!
     firstName: String!
     lastName: String!
 }

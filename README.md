@@ -1,6 +1,8 @@
 # go-gqlgen
 learning - beginner project to learn go and server side graphql
 
+getting started reference : https://gqlgen.com/getting-started/
+
 go terminology reference : https://gobyexample.com/
 
 gqlgen reference : https://gqlgen.com/

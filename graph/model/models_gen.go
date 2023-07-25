@@ -8,7 +8,6 @@ type NewTodo struct {
 }
 
 type NewUser struct {
-	ID        string `json:"id"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 }

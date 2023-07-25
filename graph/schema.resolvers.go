@@ -6,9 +6,7 @@ package graph
 
 import (
 	"context"
-	"crypto/rand"
 	"fmt"
-	"math/big"
 
 	"github.com/christiancrawford/go-gqlgen/db"
 	"github.com/christiancrawford/go-gqlgen/graph/model"
@@ -16,15 +14,7 @@ import (
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	rand, _ := rand.Int(rand.Reader, big.NewInt(100))
-	todo := &model.Todo{
-		Text:   input.Text,
-		ID:     fmt.Sprintf("T%d", rand),
-		User:   &model.User{ID: input.UserID, Name: "user " + input.UserID},
-		UserID: input.UserID,
-	}
-	r.todos = append(r.todos, todo)
-	return todo, nil
+	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
 }
 
 // CreateUser is the resolver for the createUser field.
@@ -37,11 +27,10 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	}
 
 	var user model.User
-	user.ID = input.ID
 	user.FirstName = input.FirstName
 	user.LastName = input.LastName
 
-	_, err = db.Exec(`INSERT INTO users (id, first_name, last_name) VALUES (?, ?, ?`, user.ID, user.FirstName, user.LastName)
+	_, err = db.Exec(`INSERT INTO users (id, first_name, last_name) VALUES (?, ?, ?`, 0, user.FirstName, user.LastName)
 
 	if err != nil {
 		panic(err)
@@ -55,12 +44,12 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	return r.todos, nil
+	panic(fmt.Errorf("not implemented: Todos - todos"))
 }
 
 // User is the resolver for the user field.
 func (r *todoResolver) User(ctx context.Context, obj *model.Todo) (*model.User, error) {
-	return &model.User{ID: obj.UserID, Name: "user " + obj.UserID}, nil
+	panic(fmt.Errorf("not implemented: User - user"))
 }
 
 // Mutation returns MutationResolver implementation.
