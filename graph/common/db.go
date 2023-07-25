@@ -23,12 +23,12 @@ func goDotEnvVariable(key string) string {
 }
 
 func InitDb() (*gorm.DB, error) {
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	dbHost := os.Getenv("DB_HOST")
+	dbUser := goDotEnvVariable("DB_USER")
+	dbPassword := goDotEnvVariable("DB_PASSWORD")
+	dbName := goDotEnvVariable("DB_NAME")
+	dbHost := goDotEnvVariable("DB_HOST")
 
-	dbconf := fmt.Sprintf("user=%s password=%s dbname=%s host=%s", dbUser, dbPassword, dbName, dbHost)
+	dbconf := fmt.Sprintf("host=%s user=%s password=%s dbname=%s", dbHost, dbUser, dbPassword, dbName)
 
 	var err error
 	db, err := gorm.Open(postgres.Open(dbconf), &gorm.Config{
