@@ -1,4 +1,3 @@
-# @/graph/typeDefs/todo.gql
 type Todo {
     id: ID!
     text: String!

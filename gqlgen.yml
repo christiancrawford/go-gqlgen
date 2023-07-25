@@ -1,32 +1,50 @@
-# @/gqlgen.yml
+# It specifies that schema files matching graph/typeDefs/*.gql should be loaded.
+# The graph/typeDefs/ path indicates the schema files are located in the typeDefs folder under graph/.
+# The *.gql glob pattern means any files with a .gql extension in that folder will be included.
 schema:
     - graph/typeDefs/*.gql
 
+# It specifies that:
+#       The generated code should go in the graph/generated/generated.go file.
+#       The generated code should be in the generated package.
 exec:
     filename: graph/generated/generated.go
     package: generated
 
+# It specifies that:
+#       The generated model code should go in graph/customTypes/types_gen.go
+#       The model code should be in the customTypes package
 model:
     filename: graph/customTypes/types_gen.go
     package: customTypes
 
+# This section of gqlgen.yml configures how the resolver code will be generated:
+#       layout: follow-schema means the resolver functions will be grouped according to the GraphQL schema structure.
+#       dir: graph/resolvers specifies the output directory for the resolvers.
+#       package: graph sets the Go package name for the generated resolvers.
+#       filename_template: "{name}.resolvers.go" sets the file naming pattern - each filename will be the name of the schema type, query or mutation.
 resolver:
     layout: follow-schema
     dir: graph/resolvers
     package: graph
     filename_template: "{name}.resolvers.go"
 
+# By default, gqlgen will generate resolver structs and bind the resolver methods to them automatically.
+# Leaving this section empty will use the default behavior and auto-bind the resolver methods.
 autobind:
 
+# configures the mapping between GraphQL types and Go types for the ID and Int scalars.
 models:
     ID:
         model:
+            # For the ID type, it specifies that these Go types can be used:
             - github.com/99designs/gqlgen/graphql.Int
             - github.com/99designs/gqlgen/graphql.ID
             - github.com/99designs/gqlgen/graphql.Int64
             - github.com/99designs/gqlgen/graphql.Int32
     Int:
         model:
+            # For the Int type, it specifies these Go types can be used:
             - github.com/99designs/gqlgen/graphql.Int
             - github.com/99designs/gqlgen/graphql.Int64
             - github.com/99designs/gqlgen/graphql.Int32
